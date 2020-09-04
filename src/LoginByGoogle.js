@@ -1,35 +1,27 @@
 import React, {useState} from 'react';
-import { GoogleLogin, GoogleLogout } from 'react-google-login';
-import { Redirect } from 'react-router-dom';
+import { GoogleLogin } from 'react-google-login';
 
-const LoginByGoogle = () => {
+const LoginByGoogle = (props) => {
     let [signInBanner, setSignBanner] = useState('Please Sign In');
 
     const responseGoogle = (response) => {
-        console.log(response.isSignedIn ? true : false);
         if (response.isSignedIn) {
             setSignBanner(`Welcome ${response.profileObj.givenName}!`);
         }
-        //let signInStatus = response.isSignedIn ? true : false;
-        //window.sessionStorage.setItem('isSignedIn', signInStatus);
-        //window.sessionStorage.setItem('userData', JSON.stringify(response.profileObj));
-        
-    };
-
-    const logoutGoogle = (response) => {
-        console.log('Logout Success');
-        setSignBanner('Please Sign In');
+        window.sessionStorage.setItem('isSignedIn', response);
+        window.sessionStorage.setItem('userData', JSON.stringify(response.profileObj));
+        props.history.push('/dashboard');
     };
 
     return (
-        <div className="container-fluid row">
+        <div className="row">
             <div className="col-md-3" />
             <div className="col-md-6 h-100 py-5">
                 <div className="card text-center my-auto bg-light">
                     <div className="card-body">
                         <h1 className="card-title text-dark">{signInBanner}</h1>
                         <hr style={{ 'backgroundColor': '#343A40'}} />
-                        <span className="mr-3">
+                        <span>
                             <GoogleLogin
                                 clientId="730712262782-d2m3u2mn76s2fasgsniv1d45723a9qli.apps.googleusercontent.com"
                                 buttonText="Login with Google"
@@ -40,15 +32,6 @@ const LoginByGoogle = () => {
                                 theme="dark"
                             />
                             {/* uxMode="redirect" for redirect rather than popup */}
-                        </span>
-                        <span>
-                            <GoogleLogout 
-                                clientId="730712262782-d2m3u2mn76s2fasgsniv1d45723a9qli.apps.googleusercontent.com"
-                                buttonText="Logout"
-                                onLogoutSuccess={logoutGoogle}
-                                onFailure={logoutGoogle}
-                                theme="dark"
-                            />
                         </span>
                     </div>
                 </div>
